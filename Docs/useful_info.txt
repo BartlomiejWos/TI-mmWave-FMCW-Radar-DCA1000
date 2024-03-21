@@ -1,0 +1,1 @@
+Like AWR1642, AWR1843 also has 2 LVDS lanes. Hence, you can refer to AWR1642 data format in the document, which will be same for AWR1843 as well.
