@@ -42,24 +42,30 @@ function [retVal] = rawDataParser(fileName, ...
     fclose(fid);                        % close file 
     fileSize = size(adcData, 1);        % return file size 
 
-    % real data reshape, filesize = numADCSamples*numChirps
+    
     if isReal
-        numChirps = fileSize / numADCSamples / numRX;
+        % for real data 2 bytes per sample 
+        
+        numChirps = fileSize / numADCSamples / numRX;  % Total Size in Bytes = numADCSamples * numRX * Num Frames * Num Chirps * Num bytes per Sample 
         LVDS = zeros(1, fileSize);
         LVDS = reshape(adcData, numADCSamples*numRX, numChirps);  %create column for each chirp
         LVDS = LVDS.'; %each row is data from one chirp
     else
-        % for complex data
-        % filesize = 2 * numADCSamples*numChirps
-        numChirps = fileSize/2/numADCSamples/numRX;
+        % for complex data 4 bytes per sample 
+
+        numChirps = fileSize / 2 / numADCSamples / numRX;   % Total Size in Bytes = numADCSamples * numRX * Num Frames * Num Chirps * Num bytes per Sample 
         LVDS = zeros(1, fileSize/2);
+
         %combine real and imaginary part into complex data
         %read in file: 2I is followed by 2Q
         counter = 1;
+
         for i=1:4:fileSize-1
+
             LVDS(1,counter) = adcData(i) + sqrt(-1) * adcData(i+2); 
             LVDS(1,counter+1) = adcData(i+1) + sqrt(-1) * adcData(i+3); 
             counter = counter + 2;
+            
         end
       
         LVDS = reshape(LVDS, numADCSamples*numRX, numChirps);   % create column for each chirp
@@ -70,10 +76,10 @@ function [retVal] = rawDataParser(fileName, ...
     adcData = zeros(numRX,numChirps*numADCSamples);
     for row = 1:numRX
         for i = 1: numChirps
-            adcData(row, (i-1)*numADCSamples+1:i*numADCSamples) = LVDS(i, (row1)*numADCSamples+1:row*numADCSamples);
+            adcData(row, (i-1)*numADCSamples+1:i*numADCSamples) = LVDS(i, (row-1)*numADCSamples+1:row*numADCSamples);
         end
     end
     
     retVal = adcData; % return receiver data
-    % retVal = fid;
+   
 end

@@ -9,5 +9,6 @@ isReal = false;         % set to "true" if real only data, "false" if complex da
 
 
 
-retval = rawDataParser(filename, numADCSamples, numADCBits, isReal);
-disp(retval);
+retval = rawDataParser(filename, numADCSamples, numADCBits, numRX, isReal);
+size(retval)
+
