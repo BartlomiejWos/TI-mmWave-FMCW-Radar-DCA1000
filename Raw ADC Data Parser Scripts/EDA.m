@@ -9,6 +9,11 @@ isReal = false;         % set to "true" if real only data, "false" if complex da
 
 
 
-retval = rawDataParser(filename, numADCSamples, numADCBits, numRX, isReal);
+[retval, numChirps] = rawDataParser(filename, numADCSamples, numADCBits, numRX, isReal);
 size(retval)
+disp(numChirps)
+
+
+plot(retval)
+
 
